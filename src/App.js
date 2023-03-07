@@ -1,5 +1,5 @@
 
-import CameraComponent from './components/CameraComponent.js';
+import CameraComponent from './components/FaceDetection';
 
 function App() {
   return (
