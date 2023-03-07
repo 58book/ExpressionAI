@@ -8,14 +8,18 @@
 <body>
   <div id="root"></div>
   <div id="app"></div>
-  <h2 id="checker" style="color: green;">OpenCv is loading.....</h2>
 
+  <video id="videoSource" src="../src/components/OpenCamera.js"></video>
+  <canvas id="canvasFrame" src="../src/components/OpenCamera.js"></canvas>
+  <canvas id="canvasOutput" src="../src/components/OpenCamera.js"></canvas>
+  
+
+  <h2 id="checker" style="color: green;">OpenCv is loading.....</h2>
   <script type="text/javascript">
     function opencvcheck() {
       document.getElementById('checker').innerHTML = "Opencv is Ready."
     }
   </script>
-
   <script async src="../src/opencv.js" onload="opencvcheck()" type="text/javascript"></script>
 
 </body>
