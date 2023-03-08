@@ -1,0 +1,23 @@
+.App {
+    font-family: sans-serif;
+    text-align: center;
+  }
+  
+  .webcam {
+    border: 1px solid black;
+    max-width: 680px;
+    max-height: 480px;
+    margin: 2px;
+  }
+  
+  .inputImage {
+    display: none;
+  }
+  
+  .outputImage {
+    border: 1px solid black;
+    max-width: 680px;
+    max-height: 480px;
+    margin: 2px;
+  }
+  
