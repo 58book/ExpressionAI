@@ -3,7 +3,7 @@ import Webcam from "react-webcam";
 import cv from "./opencv";
 import "./styles.css";
 
-const { loadHaarFaceModels, detectHaarFace } = require('./components/FaceDetection');
+const { loadHaarFaceModels, detectHaarFace, extractFace } = require('./components/FaceDetection');
 
 export default function App() {
   //state initialized to false, returns current state and way to change state
@@ -32,7 +32,8 @@ export default function App() {
         image.current.onload = () => {
           try {
             const currImage = cv.imread(image.current);
-            detectHaarFace(currImage);
+            // detectHaarFace(currImage);
+            extractFace(currImage);
             cv.imshow(face.current, currImage);
 
             currImage.delete();
