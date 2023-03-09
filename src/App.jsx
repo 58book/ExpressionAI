@@ -33,8 +33,8 @@ export default function App() {
           try {
             const currImage = cv.imread(image.current);
             // detectHaarFace(currImage);
-            extractFace(currImage);
-            cv.imshow(face.current, currImage);
+            // extractFace(currImage);
+            cv.imshow(face.current, extractFace(currImage));
 
             currImage.delete();
             resolve();
