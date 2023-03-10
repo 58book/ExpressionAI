@@ -7,7 +7,7 @@ const { loadHaarFaceModels, detectHaarFace, extractFace } = require('./component
 
 export default function App() {
   //state initialized to false, returns current state and way to change state
-  const [modelLoded, setModelLoaded] = React.useState(false);
+  const [modelLoaded, setModelLoaded] = React.useState(false);
 
   //setModelLoaded to true only after 
   React.useEffect(() => {
@@ -21,7 +21,7 @@ export default function App() {
   const camera = React.useRef(null);
   
   React.useEffect(() => {
-    if (!modelLoded) return;
+    if (!modelLoaded) return;
     const faceDetector = async () => {
 
       const imageStream = camera.current.getScreenshot();
@@ -57,7 +57,7 @@ export default function App() {
     return () => {
       cancelAnimationFrame(handle);
     };
-  }, [modelLoded]);
+  }, [modelLoaded]);
 
   return (
     <div className="App">
@@ -70,7 +70,7 @@ export default function App() {
       />
       <img className="inputImage" alt="input" ref={image} />
       <canvas className="outputImage" ref={face} />
-      {!modelLoded && <div>Loading Haar-cascade face model...</div>}
+      {!modelLoaded && <div>Loading Haar-cascade face model...</div>}
     </div>
   );
 }
