@@ -3,13 +3,13 @@ import Webcam from "react-webcam";
 import cv from "./opencv";
 import "./styles.css";
 
-const { loadHaarFaceModels, extractFace } = require('./components/FaceDetection');
+const { loadHaarFaceModels, detectHaarFace, extractFace } = require('./components/FaceDetection');
 
 export default function App() {
   //state initialized to false, returns current state and way to change state
   const [modelLoaded, setModelLoaded] = React.useState(false);
 
-  //setModelLoaded to true only after face detection algorithm is loaded
+  //setModelLoaded to true only after 
   React.useEffect(() => {
     loadHaarFaceModels().then(() => {
       setModelLoaded(true);
@@ -20,7 +20,6 @@ export default function App() {
   const face = React.useRef(null);
   const camera = React.useRef(null);
   
-  //useEffect hook will only run the bulk of this after modelLoaded == T
   React.useEffect(() => {
     if (!modelLoaded) return;
     const faceDetector = async () => {
@@ -33,7 +32,10 @@ export default function App() {
         image.current.onload = () => {
           try {
             const currImage = cv.imread(image.current);
+            // detectHaarFace(currImage);
+            // extractFace(currImage);
             cv.imshow(face.current, extractFace(currImage));
+
             currImage.delete();
             resolve();
           } catch (error) {
@@ -43,6 +45,7 @@ export default function App() {
         };
       });
     };
+
     let handle;
     const nextTick = () => {
       handle = requestAnimationFrame(async () => {
@@ -58,10 +61,16 @@ export default function App() {
 
   return (
     <div className="App">
-      <h2>ExpressiveNet</h2>
-      <Webcam ref={camera} className="camera" mirrored screenshotFormat="image/jpeg"/>
-      <img className="videoIn" alt="input" ref={image} />
-      <canvas className="videoOut" ref={face} />
+      <h2>Emotion Recognition</h2>
+      <Webcam
+        ref={camera}
+        className="webcam"
+        mirrored
+        screenshotFormat="image/jpeg"
+      />
+      <img className="inputImage" alt="input" ref={image} />
+      <canvas className="outputImage" ref={face} />
+      {!modelLoaded && <div>Loading Haar-cascade face model...</div>}
     </div>
   );
 }
