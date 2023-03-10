@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+<!-- <head>
   <title>OpenCV Live Camera Feed Example</title>
-</head>
+</head> -->
 
 <body>
   <div id="root"></div>
   <div id="app"></div>
+  
   <h2 id="checker" style="color: green;">OpenCv is loading.....</h2>
-
   <script type="text/javascript">
     function opencvcheck() {
       document.getElementById('checker').innerHTML = "Opencv is Ready."
     }
   </script>
-
   <script async src="../src/opencv.js" onload="opencvcheck()" type="text/javascript"></script>
 
 </body>
