@@ -21,6 +21,11 @@ export default function App() {
   const camera = React.useRef(null);
   
   //useEffect hook will only run the bulk of this after modelLoaded == T
+  //https://docs.opencv.org/4.x/de/d06/tutorial_js_basic_ops.html
+  //https://codesandbox.io/s/opencvjs-getting-started-with-videos-adapted-ptmye?file=/src/utils.js
+  //https://codesandbox.io/s/opencv-js-face-detection-i1i3u?file=/src/haarFaceDetection.js
+  //https://docs.opencv.org/3.4/df/d6c/tutorial_js_face_detection_camera.html
+
   React.useEffect(() => {
     if (!modelLoaded) return;
     const faceDetector = async () => {
