@@ -4,13 +4,13 @@ import cv from "./opencv";
 import "./styles.css";
 import axios from 'axios'
 
-const { loadHaarFaceModels, detectHaarFace, extractFace } = require('./components/FaceDetection');
+const { loadHaarFaceModels, extractFace } = require('./components/FaceDetection');
 
 export default function App() {
   //state initialized to false, returns current state and way to change state
   const [modelLoaded, setModelLoaded] = React.useState(false);
 
-  //setModelLoaded to true only after 
+  //setModelLoaded to true only after face detection algorithm is loaded
   React.useEffect(() => {
     loadHaarFaceModels().then(() => {
       setModelLoaded(true);
@@ -21,6 +21,12 @@ export default function App() {
   const face = React.useRef(null);
   const camera = React.useRef(null);
   
+  //useEffect hook will only run the bulk of this after modelLoaded == T
+  //https://docs.opencv.org/4.x/de/d06/tutorial_js_basic_ops.html
+  //https://codesandbox.io/s/opencvjs-getting-started-with-videos-adapted-ptmye?file=/src/utils.js
+  //https://codesandbox.io/s/opencv-js-face-detection-i1i3u?file=/src/haarFaceDetection.js
+  //https://docs.opencv.org/3.4/df/d6c/tutorial_js_face_detection_camera.html
+
   React.useEffect(() => {
     if (!modelLoaded) return;
     const faceDetector = async () => {
@@ -33,8 +39,6 @@ export default function App() {
         image.current.onload = () => {
           try {
             const currImage = cv.imread(image.current);
-            // detectHaarFace(currImage);
-            // extractFace(currImage);
             cv.imshow(face.current, extractFace(currImage));
 
             let data = document.getElementById('outputImage').toDataURL('image/jpeg', 1.0)
@@ -63,7 +67,6 @@ export default function App() {
         };
       });
     };
-
     let handle;
     const nextTick = () => {
       handle = requestAnimationFrame(async () => {
