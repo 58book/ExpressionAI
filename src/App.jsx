@@ -2,6 +2,7 @@ import React from "react";
 import Webcam from "react-webcam";
 import cv from "./opencv";
 import "./styles.css";
+import axios from 'axios'
 
 const { loadHaarFaceModels, detectHaarFace, extractFace } = require('./components/FaceDetection');
 
@@ -36,8 +37,25 @@ export default function App() {
             // extractFace(currImage);
             cv.imshow(face.current, extractFace(currImage));
 
-            currImage.delete();
-            resolve();
+            let data = document.getElementById('outputImage').toDataURL('image/jpeg', 1.0)
+            //data = data.replace('data:image/png;base64,', '')
+            
+            axios.post('/evaluate', {
+                input_image: data
+              },
+              {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+              })
+            .then((response) => {
+              console.log(response.data)
+              currImage.delete();
+              resolve();
+            })
+            .catch((error) => {
+              console.log(error);
+              resolve();
+            })
           } catch (error) {
             console.log(error);
             resolve();
@@ -69,7 +87,7 @@ export default function App() {
         screenshotFormat="image/jpeg"
       />
       <img className="inputImage" alt="input" ref={image} />
-      <canvas className="outputImage" ref={face} />
+      <canvas id="outputImage" className="outputImage" ref={face} />
       {!modelLoaded && <div>Loading Haar-cascade face model...</div>}
     </div>
   );
