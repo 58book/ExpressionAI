@@ -2,6 +2,7 @@ import React from "react";
 import Webcam from "react-webcam";
 import cv from "./opencv";
 import "./styles.css";
+import axios from 'axios'
 
 const { loadHaarFaceModels, extractFace } = require('./components/FaceDetection');
 
@@ -39,8 +40,26 @@ export default function App() {
           try {
             const currImage = cv.imread(image.current);
             cv.imshow(face.current, extractFace(currImage));
-            currImage.delete();
-            resolve();
+
+            let data = document.getElementById('outputImage').toDataURL('image/jpeg', 1.0)
+            //data = data.replace('data:image/png;base64,', '')
+            
+            axios.post('/evaluate', {
+                input_image: data
+              },
+              {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+              })
+            .then((response) => {
+              console.log(response.data)
+              currImage.delete();
+              resolve();
+            })
+            .catch((error) => {
+              console.log(error);
+              resolve();
+            })
           } catch (error) {
             console.log(error);
             resolve();
@@ -63,10 +82,16 @@ export default function App() {
 
   return (
     <div className="App">
-      <h2>ExpressiveNet</h2>
-      <Webcam ref={camera} className="camera" mirrored screenshotFormat="image/jpeg"/>
-      <img className="videoIn" alt="input" ref={image} />
-      <canvas className="videoOut" ref={face} />
+      <h2>Emotion Recognition</h2>
+      <Webcam
+        ref={camera}
+        className="webcam"
+        mirrored
+        screenshotFormat="image/jpeg"
+      />
+      <img className="inputImage" alt="input" ref={image} />
+      <canvas id="outputImage" className="outputImage" ref={face} />
+      {!modelLoaded && <div>Loading Haar-cascade face model...</div>}
     </div>
   );
 }
