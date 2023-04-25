@@ -20,6 +20,7 @@ export default function App() {
   const image = React.useRef(null);
   const face = React.useRef(null);
   const camera = React.useRef(null);
+  // const faceCutout = React.useRef(null);
   
   //useEffect hook will only run the bulk of this after modelLoaded == T
   //https://docs.opencv.org/4.x/de/d06/tutorial_js_basic_ops.html
@@ -39,10 +40,10 @@ export default function App() {
         image.current.onload = () => {
           try {
             const currImage = cv.imread(image.current);
-            cv.imshow(face.current, extractFace(currImage));
+            const faceImg = extractFace(currImage); // get face image
+            cv.imshow(face.current, faceImg);
 
             let data = document.getElementById('outputImage').toDataURL('image/jpeg', 1.0)
-            //data = data.replace('data:image/png;base64,', '')
             
             axios.post('/evaluate', {
                 input_image: data
@@ -81,17 +82,20 @@ export default function App() {
   }, [modelLoaded]);
 
   return (
-    <div className="App">
-      <h2>Emotion Recognition</h2>
+    <div className="app">
+      {/* <h2>Emotion Recognition</h2> */}
+
       <Webcam
         ref={camera}
         className="webcam"
         mirrored
         screenshotFormat="image/jpeg"
       />
-      <img className="inputImage" alt="input" ref={image} />
-      <canvas id="outputImage" className="outputImage" ref={face} />
-      {!modelLoaded && <div>Loading Haar-cascade face model...</div>}
+      <img className="inputImage hidden" alt="input" ref={image} />
+      <canvas id="outputImage" className="face" ref={face} />
+
+      {/* <img className="faceCutout" alt="face cutout" ref={faceCutout} /> */}
+      {/* {!modelLoaded && <div>Loading Haar-cascade face model...</div>} */}
     </div>
   );
 }
