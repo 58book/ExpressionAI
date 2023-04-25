@@ -43,9 +43,9 @@ export function extractFace(img) {
 
   //if there is a face in the frame, take the first face detected
   if (faces.size() >= 1) {
-    console.log("=============CONSOLE TEST=============");
+    // console.log("=============CONSOLE TEST=============");
     const closeFace = new cv.Rect(faces.get(0).x, faces.get(0).y, faces.get(0).width, faces.get(0).height );
-    console.log(closeFace);
+    // console.log(closeFace);
     newImg = img.roi(closeFace);
   }
 

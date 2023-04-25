@@ -53,6 +53,8 @@ export default function App() {
                 'Content-Type': 'application/json'
               })
             .then((response) => {
+              const targetElement = document.querySelector('.output');
+              targetElement.innerHTML = response.data["expression"];
               console.log(response.data)
               currImage.delete();
               resolve();
