@@ -20,9 +20,9 @@ export default function App() {
   const image = React.useRef(null);
   const face = React.useRef(null);
   const camera = React.useRef(null);
-  // const faceCutout = React.useRef(null);
-  
+
   //useEffect hook will only run the bulk of this after modelLoaded == T
+  //useEffect hook is then used to load the face detection algorithm using the loadHaarFaceModels
   //https://docs.opencv.org/4.x/de/d06/tutorial_js_basic_ops.html
   //https://codesandbox.io/s/opencvjs-getting-started-with-videos-adapted-ptmye?file=/src/utils.js
   //https://codesandbox.io/s/opencv-js-face-detection-i1i3u?file=/src/haarFaceDetection.js
@@ -44,25 +44,26 @@ export default function App() {
             cv.imshow(face.current, faceImg);
 
             let data = document.getElementById('outputImage').toDataURL('image/jpeg', 1.0)
-            
+
+            //sends HTTP POST request to '/evaluate' endpoint using axios.
             axios.post('/evaluate', {
-                input_image: data
-              },
+              input_image: data
+            },
               {
                 'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
               })
-            .then((response) => {
-              const targetElement = document.querySelector('.output');
-              targetElement.innerHTML = response.data["expression"];
-              console.log(response.data)
-              currImage.delete();
-              resolve();
-            })
-            .catch((error) => {
-              console.log(error);
-              resolve();
-            })
+              .then((response) => {
+                const targetElement = document.querySelector('.output');
+                targetElement.innerHTML = response.data["expression"];
+                console.log(response.data)
+                currImage.delete();
+                resolve();
+              })
+              .catch((error) => {
+                console.log(error);
+                resolve();
+              })
           } catch (error) {
             console.log(error);
             resolve();
@@ -71,6 +72,7 @@ export default function App() {
       });
     };
     let handle;
+    //an infinite loop that runs the faceDetector function at each frame.
     const nextTick = () => {
       handle = requestAnimationFrame(async () => {
         await faceDetector();
@@ -83,9 +85,9 @@ export default function App() {
     };
   }, [modelLoaded]);
 
+  //returns a div that contains the webcam component, the input image element, and a canvas for the face
   return (
     <div className="app">
-      {/* <h2>Emotion Recognition</h2> */}
 
       <Webcam
         ref={camera}
@@ -96,8 +98,6 @@ export default function App() {
       <img className="inputImage hidden" alt="input" ref={image} />
       <canvas id="outputImage" className="face" ref={face} />
 
-      {/* <img className="faceCutout" alt="face cutout" ref={faceCutout} /> */}
-      {/* {!modelLoaded && <div>Loading Haar-cascade face model...</div>} */}
     </div>
   );
 }

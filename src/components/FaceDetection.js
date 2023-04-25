@@ -7,20 +7,20 @@ let faceCascade;
 //load the OpenCv haar cascade facial detection algorithm
 export async function loadHaarFaceModels() {
 
-  //React.js Promise() must be used to load OpenCv haar cascade algorithm. Tutorials taken from sources below
+  //React.js Promise() must be used to load OpenCv haar cascade algorithm. Tutorials taken from sources in App.jsx
   const loadFaceCascade = async () => {
-      await Promise.all([
-        new Promise((resolve) => {
-          setTimeout(() => {
-            faceCascade = new cv.CascadeClassifier();
-            faceCascade.load("cv_haarcascade_frontalface_default.xml");
-            resolve();
-          }, 1000);
-        })
-      ]);
+    await Promise.all([
+      new Promise((resolve) => {
+        setTimeout(() => {
+          faceCascade = new cv.CascadeClassifier();
+          faceCascade.load("cv_haarcascade_frontalface_default.xml");
+          resolve();
+        }, 1000);
+      })
+    ]);
   }
-  
-  //To access the file outside of the scope of src
+
+  //To access the cascade file outside of the scope of src
   loadDataFile("cv_haarcascade_frontalface_default.xml", "cv_haarcascade_frontalface_default.xml")
     .then(loadFaceCascade)
     .catch((error) => {
@@ -43,9 +43,7 @@ export function extractFace(img) {
 
   //if there is a face in the frame, take the first face detected
   if (faces.size() >= 1) {
-    // console.log("=============CONSOLE TEST=============");
-    const closeFace = new cv.Rect(faces.get(0).x, faces.get(0).y, faces.get(0).width, faces.get(0).height );
-    // console.log(closeFace);
+    const closeFace = new cv.Rect(faces.get(0).x, faces.get(0).y, faces.get(0).width, faces.get(0).height);
     newImg = img.roi(closeFace);
   }
 
