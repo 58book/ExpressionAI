@@ -7,7 +7,7 @@ import numpy as np
 app = Flask(__name__)
 #CORS(app)
 
-model = tf.keras.models.load_model('models/vgg16/fer2013_vgg16')
+model = tf.keras.models.load_model('model\\content\\395_model')
 expressions = {0: 'Angry', 1: 'Disgust', 2: 'Fear', 3: 'Happy', 4: 'Sad', 5: 'Surprise', 6:'Neutral'}
 
 #@cross_origin
@@ -18,10 +18,10 @@ def predict_emotion():
     img_b64 = img_b64.replace('/', '_').replace('+', '-')
     img = tf.io.decode_image(img_decode)
     #img = tf.image.rgb_to_grayscale(img)
-    img = tf.image.resize_with_pad(img, 48, 48)
+    img = tf.image.resize_with_pad(img, 224, 224)
     img = tf.expand_dims(img, axis=0)
-    probs = np.ravel(model.predict(img))
-    pred = np.argmax(probs)
+    probs = model.predict(img)
+    pred = np.argmax(probs[2])
     resp = make_response({'image_shape': img.shape.as_list(), 'expression': expressions[pred]})
     resp.headers['Access-Control-Allow-Origin'] = '*'
     print(resp.headers)
